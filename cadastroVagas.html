@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <base target="_top">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Vagas - Clínicas Odontológicas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #f0f7fd;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Estilos do formulário */
+        .form-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            /* O formulário agora é visível por padrão */
+            display: block; 
+        }
+        
+        .form-section {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eaeaea;
+        }
+        
+        .section-title {
+            color: #0a68c9;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title i {
+            margin-right: 10px;
+            font-size: 1.6rem;
+        }
+        
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 -10px 15px;
+        }
+        
+        .form-group {
+            flex: 1 0 300px;
+            padding: 0 10px;
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #444;
+        }
+        
+        input[type="text"],
+        input[type="tel"],
+        input[type="email"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #1a8ff9;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(26, 143, 249, 0.2);
+        }
+        
+        .checkbox-group, .radio-group {
+            margin: 10px 0;
+        }
+        
+        .checkbox-group label, .radio-group label {
+            display: flex;
+            align-items: center;
+            font-weight: normal;
+            cursor: pointer;
+            margin-bottom: 8px;
+        }
+        
+        .checkbox-group input, .radio-group input {
+            margin-right: 10px;
+            width: 18px;
+            height: 18px;
+        }
+        
+        .specialties-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .btn-submit {
+            background: linear-gradient(135deg, #1a8ff9 0%, #0a68c9 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: block;
+            margin: 30px auto 0;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+        
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(26, 143, 249, 0.4);
+        }
+        
+        .required {
+            color: #e74c3c;
+        }
+        
+        .address-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .address-grid .form-group.cep-input {
+            grid-column: span 1;
+            max-width: 180px;
+        }
+        
+        .address-grid .form-group.numero-input {
+            grid-column: span 1;
+            max-width: 120px;
+        }
+        
+        .address-grid .form-group.endereco-input {
+            grid-column: 1 / -1;
+        }
+
+        .address-grid .form-group.bairro-input {
+            grid-column: span 1;
+        }
+        
+        .address-grid .form-group.municipio-input {
+            grid-column: span 1;
+        }
+        
+        .address-grid .form-group.estado-input {
+            grid-column: span 1;
+        }
+        
+        @media (max-width: 768px) {
+            .address-grid {
+                display: block;
+            }
+
+            .address-grid .form-group {
+                max-width: 100%;
+            }
+        }
+        
+        /* Estilo para esconder o campo de porcentagem */
+        .form-group.porcentagem-container {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="header-container"></div>
+        
+        <div class="form-container" id="cadastro-vaga">
+            <form id="jobForm">
+
+                <div class="form-section">
+                    <h2 class="section-title">
+                        <i style="color: #0a68c9;">📋</i> Informações Básicas
+                    </h2>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="nome">Nome da Clínica <span class="required">*</span></label>
+                            <input type="text" id="nome" name="nome" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="contato">Contato <span class="required">*</span></label>
+                            <input type="tel" id="contato" name="contato" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <h2 class="section-title">
+                        <i style="color: #0a68c9;">📍</i> Localização
+                    </h2>
+                    
+                    <div class="address-grid">
+                        <div class="form-group cep-input">
+                            <label for="cep">CEP <span class="required">*</span></label>
+                            <input type="text" id="cep" name="cep" required>
+                        </div>
+
+                        <div class="form-group numero-input">
+                            <label for="numero">Número <span class="required">*</span></label>
+                            <input type="text" id="numero" name="numero" required>
+                        </div>
+                    
+                        <div class="form-group endereco-input">
+                            <label for="endereco">Endereço <span class="required">*</span></label>
+                            <input type="text" id="endereco" name="endereco" required>
+                        </div>
+                        
+                        <div class="form-group bairro-input">
+                            <label for="bairro">Bairro <span class="required">*</span></label>
+                            <input type="text" id="bairro" name="bairro" required>
+                        </div>
+                        
+                        <div class="form-group municipio-input">
+                            <label for="municipio">Município <span class="required">*</span></label>
+                            <input type="text" id="municipio" name="municipio" required>
+                        </div>
+
+                        <div class="form-group estado-input">
+                            <label for="estado">Estado <span class="required">*</span></label>
+                            <input type="text" id="estado" name="estado" required>
+                        </div>
+                        
+                        <div class="form-group estado-input">
+                            <label for="uf">UF <span class="required">*</span></label>
+                            <select id="uf" name="uf" required>
+                                <option value="">Selecione</option>
+                                <option value="AC">AC</option>
+                                <option value="AL">AL</option>
+                                <option value="AP">AP</option>
+                                <option value="AM">AM</option>
+                                <option value="BA">BA</option>
+                                <option value="CE">CE</option>
+                                <option value="DF">DF</option>
+                                <option value="ES">ES</option>
+                                <option value="GO">GO</option>
+                                <option value="MA">MA</option>
+                                <option value="MT">MT</option>
+                                <option value="MS">MS</option>
+                                <option value="MG">MG</option>
+                                <option value="PA">PA</option>
+                                <option value="PB">PB</option>
+                                <option value="PR">PR</option>
+                                <option value="PE">PE</option>
+                                <option value="PI">PI</option>
+                                <option value="RJ">RJ</option>
+                                <option value="RN">RN</option>
+                                <option value="RS">RS</option>
+                                <option value="RO">RO</option>
+                                <option value="RR">RR</option>
+                                <option value="SC">SC</option>
+                                <option value="SP">SP</option>
+                                <option value="SE">SE</option>
+                                <option value="TO">TO</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="regiao">Região <span class="required">*</span></label>
+                            <input type="text" id="regiao" name="regiao" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <h2 class="section-title">
+                        <i style="color: #0a68c9;">💼</i> Detalhes da Vaga
+                    </h2>
+                    
+                    <div class="form-group">
+                        <label>Alojamento <span class="required">*</span></label>
+                        <div class="radio-group">
+                            <label>
+                                <input type="radio" name="alojamento" value="Sim" required> Sim
+                            </label>
+                            <label>
+                                <input type="radio" name="alojamento" value="Não"> Não
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Horário de Trabalho <span class="required">*</span></label>
+                        <div class="radio-group">
+                            <label>
+                                <input type="radio" name="horario_trabalho" value="Comercial padrão (08:00 às 18:00, com duas horas de almoço)" required> Comercial padrão (08:00 às 18:00, com duas horas de almoço)
+                            </label>
+                            <label>
+                                <input type="radio" name="horario_trabalho" value="8h com modificações"> 8h com modificações
+                            </label>
+                            <label>
+                                <input type="radio" name="horario_trabalho" value="Mais que 8 horas"> Mais que 8 horas
+                            </label>
+                            <label>
+                                <input type="radio" name="horario_trabalho" value="Menos que 8 horas"> Menos que 8 horas
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Forma de Pagamento <span class="required">*</span></label>
+                        <div class="radio-group" id="remuneracao-radio-group">
+                            <label>
+                                <input type="radio" name="remuneracao" value="Porcentagem" required> Porcentagem
+                            </label>
+                            <label>
+                                <input type="radio" name="remuneracao" value="Diária"> Diária
+                            </label>
+                            <label>
+                                <input type="radio" name="remuneracao" value="CLT"> CLT
+                            </label>
+                            <label>
+                                <input type="radio" name="remuneracao" value="Prolabore"> Prolabore
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group porcentagem-container">
+                        <label for="porcentagem">Porcentagem</label>
+                        <textarea id="porcentagem" name="porcentagem" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Mínimo Garantido <span class="required">*</span></label>
+                        <div class="radio-group">
+                            <label>
+                                <input type="radio" name="minimo_garantido" value="Sim" required> Sim
+                            </label>
+                            <label>
+                                <input type="radio" name="minimo_garantido" value="Não"> Não
+                            </label>
+                        </div>
+                    </div>
+                    
+                </div>
+
+                <div class="form-section">
+                    <h2 class="section-title">
+                        <i style="color: #0a68c9;">🦷</i> Tipo de Vaga e Especialidades
+                    </h2>
+                    
+                    <div class="form-group">
+                        <label>Tipo de Vaga <span class="required">*</span></label>
+                        <div class="radio-group">
+                            <label>
+                                <input type="radio" name="tipo_vaga" value="Dentista" required> Dentista
+                            </label>
+                            <label>
+                                <input type="radio" name="tipo_vaga" value="Protético"> Protético
+                            </label>
+                            <label>
+                                <input type="radio" name="tipo_vaga" value="ASB ou TSB"> ASB ou TSB
+                            </label>
+                            <label>
+                                <input type="radio" name="tipo_vaga" value="Estágios"> Estágios
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group" id="especialidades-container" style="display: none;">
+                        <label>Especialidades (Selecione uma ou mais)</label>
+                        <div class="specialties-container">
+                            <label>
+                                <input type="checkbox" name="especialidade_checkboxes" value="Clínica geral"> Clínica geral
+                            </label>
+                            <label>
+                                <input type="checkbox" name="especialidade_checkboxes" value="Endodontia"> Endodontia
+                            </label>
+                            <label>
+                                <input type="checkbox" name="especialidade_checkboxes" value="Cirurgia oral menor"> Cirurgia oral menor
+                            </label>
+                            <label>
+                                <input type="checkbox" name="especialidade_checkboxes" value="Cirurgia Bucomaxilofacial"> Cirurgia Bucomaxilofacial
+                            </label>
+                            <label>
+                                <input type="checkbox" name="especialidade_checkboxes" value="Periodontia"> Periodontia
+                            </label>
+                            <label>
+                                <input type="checkbox" name="especialidade_checkboxes" value="Dentística"> Dentística - lentes ou facetas e mais
+                            </label>
+                            <label>
+                                <input type="checkbox" name="especialidade_checkboxes" value="Prótese"> Prótese
+                            </label>
+                            <label>
+                                <input type="checkbox" name="especialidade_checkboxes" value="Odontogeriatria"> Odontogeriatria
+                            </label>
+                            <label>
+                                <input type="checkbox" name="especialidade_checkboxes" value="Odontolegal"> Odontolegal
+                            </label>
+                            <label>
+                                <input type="checkbox" name="especialidade_checkboxes" value="PNE"> PNE
+                            </label>
+                            <label>
+                                <input type="checkbox" name="especialidade_checkboxes" value="Odontopediatria"> Odontopediatria
+                            </label>
+                            <label>
+                                <input type="checkbox" name="especialidade_checkboxes" value="Saúde Pública"> Saúde Pública/Saúde coletiva
+                            </label>
+                            <label>
+                                <input type="checkbox" name="especialidade_checkboxes" value="Acunpultura facial"> Acunpultura facial
+                            </label>
+                            <label>
+                                <input type="checkbox" name="especialidade_checkboxes" value="Radiologia"> Radiologia/Imagiologia
+                            </label>
+                            <label>
+                                <input type="checkbox" name="especialidade_checkboxes" value="Implantodontia"> Implantodontia
+                            </label>
+                            <label>
+                                <input type="checkbox" name="especialidade_checkboxes" value="Ortodontia"> Ortodontia
+                            </label>
+                            <label>
+                                <input type="checkbox" name="especialidade_checkboxes" value="Odontologia digital"> Odontologia digital
+                            </label>
+                            <label>
+                                <input type="checkbox" name="especialidade_checkboxes" value="Odontologia do esporte"> Odontologia do esporte
+                            </label>
+                            <label>
+                                <input type="checkbox" name="especialidade_checkboxes" value="Odontologia do trabalho"> Odontologia do trabalho
+                            </label>
+                            <label>
+                                <input type="checkbox" name="especialidade_checkboxes" value="Patologia oral"> Patologia oral e maxilo facial
+                            </label>
+                            <label>
+                                <input type="checkbox" name="especialidade_checkboxes" value="Estomatologia"> Estomatologia
+                            </label>
+                            <label>
+                                <input type="checkbox" name="especialidade_checkboxes" value="Disfunção temporomandibular"> Disfunção temporomandibular e Dor orofacial
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn-submit">Cadastrar Vaga</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // URL do seu Apps Script publicado
+        const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzF561YroAUncCLWNNQD4pIJA770oe0WHSxQ7_M-26LUdKoRxrA00AokJho0n7UmolF8w/exec';
+
+        // Função para carregar o header
+        function loadHeader() {
+            fetch('header.html')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erro ao carregar o header.html');
+                    }
+                    return response.text();
+                })
+                .then(html => {
+                    document.getElementById('header-container').innerHTML = html;
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                });
+        }
+        
+        // Carrega o header quando a página estiver pronta
+        document.addEventListener('DOMContentLoaded', loadHeader);
+
+        const REGIAO_MAP = {
+            'AC': 'Norte', 'AL': 'Nordeste', 'AP': 'Norte', 'AM': 'Norte', 'BA': 'Nordeste',
+            'CE': 'Nordeste', 'DF': 'Centro-Oeste', 'ES': 'Sudeste', 'GO': 'Centro-Oeste',
+            'MA': 'Nordeste', 'MT': 'Centro-Oeste', 'MS': 'Centro-Oeste', 'MG': 'Sudeste',
+            'PA': 'Norte', 'PB': 'Nordeste', 'PR': 'Sul', 'PE': 'Nordeste', 'PI': 'Nordeste',
+            'RJ': 'Sudeste', 'RN': 'Nordeste', 'RS': 'Sul', 'RO': 'Norte', 'RR': 'Norte',
+            'SC': 'Sul', 'SP': 'Sudeste', 'SE': 'Nordeste', 'TO': 'Norte'
+        };
+
+        // Funções para máscaras e preenchimento de endereço
+        function maskCEP(value) {
+            value = value.replace(/\D/g, "");
+            value = value.replace(/^(\d{5})(\d)/, "$1-$2");
+            return value;
+        }
+
+        function maskTel(value) {
+            value = value.replace(/\D/g, "");
+            value = value.replace(/^(\d{2})(\d)/g, "($1) $2");
+            value = value.replace(/(\d)(\d{4})$/, "$1-$2");
+            return value;
+        }
+
+        function searchCEP(cep) {
+            const cleanCEP = cep.replace(/\D/g, '');
+            if (cleanCEP.length !== 8) return;
+            fetch(`https://viacep.com.br/ws/${cleanCEP}/json/`)
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.erro) {
+                        document.getElementById('endereco').value = data.logradouro;
+                        document.getElementById('bairro').value = data.bairro;
+                        document.getElementById('municipio').value = data.localidade;
+                        document.getElementById('estado').value = data.estado;
+                        document.getElementById('uf').value = data.uf;
+                        document.getElementById('regiao').value = REGIAO_MAP[data.uf] || 'Não encontrado';
+                    } else {
+                        alert('CEP não encontrado. Por favor, preencha o endereço manualmente.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao buscar o CEP:', error);
+                    alert('Erro ao buscar o CEP. Por favor, preencha o endereço manualmente.');
+                });
+        }
+        document.getElementById('uf').addEventListener('change', (e) => {
+            const selectedUF = e.target.value;
+            const stateName = e.target.options[e.target.selectedIndex].text;
+            document.getElementById('estado').value = stateName;
+            document.getElementById('regiao').value = REGIAO_MAP[selectedUF] || 'Não encontrado';
+        });
+        document.getElementById('cep').addEventListener('input', (e) => {
+            e.target.value = maskCEP(e.target.value);
+        });
+        document.getElementById('contato').addEventListener('input', (e) => {
+            e.target.value = maskTel(e.target.value);
+        });
+        document.getElementById('cep').addEventListener('blur', (e) => {
+            searchCEP(e.target.value);
+        });
+        document.querySelectorAll('input[name="tipo_vaga"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const especialidadesContainer = document.getElementById('especialidades-container');
+                especialidadesContainer.style.display = this.value === 'Dentista' ? 'block' : 'none';
+            });
+        });
+
+        // NOVO CÓDIGO: Lógica para mostrar/esconder o campo de Porcentagem
+        document.querySelectorAll('input[name="remuneracao"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const porcentagemContainer = document.querySelector('.porcentagem-container');
+                porcentagemContainer.style.display = this.value === 'Porcentagem' ? 'block' : 'none';
+            });
+        });
+
+        // Lida com o envio do formulário
+        document.getElementById('jobForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const form = e.target;
+            
+            let isValid = true;
+            form.querySelectorAll('[required]').forEach(input => {
+                if (input.value.trim() === '') {
+                    isValid = false;
+                    input.style.borderColor = 'red';
+                } else {
+                    input.style.borderColor = '#ddd';
+                }
+            });
+            if (!isValid) {
+                alert('Por favor, preencha todos os campos obrigatórios.');
+                return;
+            }
+
+            const submitBtn = form.querySelector('.btn-submit');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Enviando...';
+            
+            const formData = new FormData(form);
+            const data = {};
+            formData.forEach((value, key) => {
+                data[key] = value;
+            });
+            
+            // Campo Especialidade é uma string única
+            const tipoVaga = data.tipo_vaga || '';
+            const especialidadesSelecionadas = [];
+            form.querySelectorAll('input[name="especialidade_checkboxes"]:checked').forEach(c => {
+                especialidadesSelecionadas.push(c.value);
+            });
+            let especialidadeFinal = tipoVaga;
+            if (especialidadesSelecionadas.length > 0) {
+                especialidadeFinal += especialidadeFinal ? ', ' + especialidadesSelecionadas.join(', ') : especialidadesSelecionadas.join(', ');
+            }
+            
+            // Dados para envio, incluindo os campos que estavam faltando
+            const dataToSend = {
+                ...data,
+                porcentagem: data.porcentagem || '',
+                especialidade: especialidadeFinal,
+                action: 'submitForm'
+            };
+
+            fetch(GOOGLE_SHEETS_URL, {
+                method: 'POST',
+                body: new URLSearchParams(dataToSend)
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.result === 'success') {
+                    alert('Formulário enviado com sucesso!');
+                    form.reset();
+                    // Esconde o campo de porcentagem novamente após o envio
+                    document.querySelector('.porcentagem-container').style.display = 'none';
+                } else {
+                    alert('Erro ao enviar o formulário: ' + result.message);
+                    console.error('Erro:', result.error);
+                }
+            })
+            .catch(error => {
+                alert('Erro de conexão. Tente novamente mais tarde.');
+                console.error('Erro:', error);
+            })
+            .finally(() => {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Cadastrar Vaga';
+            });
+        });
+    </script>
+</body>
+</html>

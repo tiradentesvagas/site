@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>    
+    <base target="_top">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tiradentes Vagas - Ver Vagas</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        /* Estilos anteriores mantidos intactos */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f0f7fd;
+            color: #333;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* Search and Filter Bar */
+        .search-filter-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            padding: 25px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .filter-group label {
+            font-size: 0.9em;
+            font-weight: bold;
+            color: #555;
+            margin-bottom: 5px;
+        }
+
+        .search-input, .filter-select {
+            width: 100%;
+            padding: 14px 18px;
+            border: 1px solid #c0d9eb;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-color: white;
+        }
+
+        /* Estilo específico para o campo de pesquisa */
+        .search-container {
+            position: relative;
+        }
+        
+        .search-input {
+            padding-right: 40px; /* Espaço para o ícone X */
+        }
+        
+        .clear-search {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #999;
+            cursor: pointer;
+            display: none;
+            font-size: 18px;
+        }
+        
+        .search-input:not(:placeholder-shown) + .clear-search {
+            display: block;
+        }
+        
+        .filter-select {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+        }
+
+        .search-input:focus, .filter-select:focus {
+            outline: none;
+            border-color: #1a8ff9;
+            box-shadow: 0 0 0 3px rgba(26, 143, 249, 0.2);
+        }
+
+        .clear-button-container {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: flex-start;
+            margin-top: 10px;
+        }
+
+        .clear-button {
+            background-color: #1a8ff9;
+            color: white;
+            border: none;
+            padding: 14px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.05em;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            white-space: nowrap;
+        }
+        
+        .clear-button:hover {
+            background-color: #0a68c9;
+            transform: translateY(-2px);
+        }
+
+        /* Job Listings */
+        .job-listings {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
+            gap: 25px;
+        }
+
+        /* Job Card */
+        .job-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #eee;
+            border-left: 5px solid #0d47a1;
+        }
+
+        .job-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .job-tag {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 25px;
+            font-size: 0.85em;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .job-tag.northeast { background-color: #2196F3; }
+        .job-tag.southeast { background-color: #FFC107; color: #333; }
+
+        .job-card h3 {
+            font-size: 1.6em;
+            color: #0d47a1;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .card-details {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            border-top: 1px solid #f0f0f0;
+            padding-top: 15px;
+        }
+
+        .card-details li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            color: #555;
+            font-size: 0.95em;
+        }
+        .card-details li:last-child {
+            margin-bottom: 0;
+        }
+
+        .card-details .material-icons {
+            font-size: 1.3em;
+            margin-right: 12px;
+            color: #0d47a1;
+        }
+        
+        .card-details li strong {
+            font-weight: bold;
+            margin-right: 5px;
+        }
+
+        /* Contador de vagas */
+        .job-count-display {
+            text-align: left;
+            font-size: 1.1em;
+            color: #555;
+            margin-bottom: 25px;
+            font-weight: bold;
+        }
+
+        /* Mensagens de estado */
+        .loading, .error-message {
+            text-align: center;
+            padding: 30px;
+            font-size: 1.1em;
+            color: #666;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            margin-top: 25px;
+        }
+        .error-message {
+            color: #c0392b;
+            background-color: #ffebee;
+            border: 1px solid #c0392b;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.6);
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 8% auto;
+            padding: 35px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            max-width: 650px;
+            position: relative;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 38px;
+            font-weight: lighter;
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close:hover {
+            color: #333;
+        }
+        
+        .modal h2 {
+            font-size: 2em;
+            color: #0d47a1;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+            font-weight: 700;
+        }
+        
+        .modal-details {
+            list-style: none;
+            padding: 0;
+            margin-top: 15px;
+        }
+        
+        .modal-details li {
+            font-size: 1.05em;
+            margin-bottom: 12px;
+            color: #444;
+            display: flex;
+            align-items: center;
+        }
+
+        .modal-details li strong {
+            color: #0d47a1;
+            margin-right: 5px;
+            font-weight: 600;
+        }
+
+        .modal-details li .material-icons {
+            font-size: 1.3em;
+            margin-right: 12px;
+            color: #0d47a1;
+        }
+
+        .share-button {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            background-color: #1a8ff9;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            margin-top: 30px;
+            box-shadow: 0 4px 10px rgba(26, 143, 249, 0.2);
+        }
+
+        .share-button:hover {
+            background-color: #0a68c9;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(26, 143, 249, 0.3);
+        }
+
+        /* Animações */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="header-placeholder"></div>
+
+        <div class="search-filter-bar">
+            <div class="filter-group search-container">
+                <label for="searchInput">Pesquisa Refinada</label>
+                <input type="text" class="search-input" id="searchInput" placeholder="Pesquisar...">
+                <button class="clear-search" id="clearSearch">×</button>
+            </div>
+            <div class="filter-group">
+                <label for="especialidadeFilter">Especialidade</label>
+                <select id="especialidadeFilter" class="filter-select">
+                    <option value="">Todas as especialidades</option>
+                    <option value="Dentista">Dentista</option>
+                    <option value="Protético">Protético</option>
+                    <option value="ASB ou TSB">ASB ou TSB</option>
+                    <option value="Estágios">Estágios</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="estadoFilter">Estado</label>
+                <select id="estadoFilter" class="filter-select">
+                    <option value="">Todos os estados</option>
+                    <option value="Acre">Acre</option>
+                    <option value="Alagoas">Alagoas</option>
+                    <option value="Amapá">Amapá</option>
+                    <option value="Amazonas">Amazonas</option>
+                    <option value="Bahia">Bahia</option>
+                    <option value="Ceará">Ceará</option>
+                    <option value="Distrito Federal">Distrito Federal</option>
+                    <option value="Espírito Santo">Espírito Santo</option>
+                    <option value="Goiás">Goiás</option>
+                    <option value="Maranhão">Maranhão</option>
+                    <option value="Mato Grosso">Mato Grosso</option>
+                    <option value="Mato Grosso do Sul">Mato Grosso do Sul</option>
+                    <option value="Minas Gerais">Minas Gerais</option>
+                    <option value="Pará">Pará</option>
+                    <option value="Paraíba">Paraíba</option>
+                    <option value="Paraná">Paraná</option>
+                    <option value="Pernambuco">Pernambuco</option>
+                    <option value="Piauí">Piauí</option>
+                    <option value="Rio de Janeiro">Rio de Janeiro</option>
+                    <option value="Rio Grande do Norte">Rio Grande do Norte</option>
+                    <option value="Rio Grande do Sul">Rio Grande do Sul</option>
+                    <option value="Rondônia">Rondônia</option>
+                    <option value="Roraima">Roraima</option>
+                    <option value="Santa Catarina">Santa Catarina</option>
+                    <option value="São Paulo">São Paulo</option>
+                    <option value="Sergipe">Sergipe</option>
+                    <option value="Tocantins">Tocantins</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="cidadeFilter">Cidade</label>
+                <select id="cidadeFilter" class="filter-select">
+                    <option value="">Todas as cidades</option>
+                </select>
+            </div>
+            <!-- FILTRO DE REMUNERAÇÃO FIXO -->
+            <div class="filter-group">
+                <label for="remuneracaoFilter">Remuneração</label>
+                <select id="remuneracaoFilter" class="filter-select">
+                    <option value="">Todas as remunerações</option>
+                    <option value="Porcentagem">Porcentagem</option>
+                    <option value="Diária">Diária</option>
+                    <option value="CLT">CLT</option>
+                    <option value="Prolabore">Prolabore</option>
+                </select>
+            </div>
+            <!-- FILTRO DE ALOJAMENTO FIXO -->
+            <div class="filter-group">
+                <label for="alojamentoFilter">Alojamento</label>
+                <select id="alojamentoFilter" class="filter-select">
+                    <option value="">Todos os tipos</option>
+                    <option value="Sim">Com alojamento</option>
+                    <option value="Não">Sem alojamento</option>
+                </select>
+            </div>
+            <!-- FILTRO DE MÍNIMO GARANTIDO FIXO -->
+            <div class="filter-group">
+                <label for="minimoGarantidoFilter">Mínimo Garantido</label>
+                <select id="minimoGarantidoFilter" class="filter-select">
+                    <option value="">Todos</option>
+                    <option value="Sim">Sim</option>
+                    <option value="Não">Não</option>
+                </select>
+            </div>
+            <!-- FILTRO DE HORÁRIO FIXO -->
+            <div class="filter-group">
+                <label for="horarioFilter">Horário</label>
+                <select id="horarioFilter" class="filter-select">
+                    <option value="">Todos os horários</option>
+                    <option value="Comercial padrão (08:00 às 18:00, com duas horas de almoço)">Comercial padrão (08:00 às 18:00, com duas horas de almoço)</option>
+                    <option value="8h com modificações">8h com modificações</option>
+                    <option value="Mais que 8 horas">Mais que 8 horas</option>
+                    <option value="Menos que 8 horas">Menos que 8 horas</option>
+                </select>
+            </div>
+            <div class="clear-button-container">
+                <button class="clear-button" id="clearButton">Limpar Filtros</button>
+            </div>
+        </div>
+        
+        <p class="job-count-display" id="job-count-display"></p>
+        
+        <div class="job-listings" id="job-listings-container">
+            <p class="loading">Carregando vagas...</p>
+        </div>
+    </div>
+
+    <div id="jobModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
+            <h2 id="modal-clinic-name"></h2>
+       
+            <ul class="modal-details">
+                <li><span class="material-icons">work</span><strong>Especialidade:</strong> <span id="modal-specialty"></span></li>
+                <li><span class="material-icons">location_on</span><strong>Local:</strong> <span id="modal-location"></span></li>
+                <li><span class="material-icons">person</span><strong>Contato:</strong> <span id="modal-contact"></span></li>
+                <li><span class="material-icons">home</span><strong>Endereço:</strong> <span id="modal-address"></span></li>
+                <li><span class="material-icons">schedule</span><strong>Horário:</strong> <span id="modal-schedule"></span></li>
+                <li><span class="material-icons">payments</span><strong>Remuneração:</strong> <span id="modal-salary"></span></li>
+                <li><span class="material-icons">bed</span><strong>Alojamento:</strong> <span id="modal-accommodation"></span></li>
+                <li><span class="material-icons">paid</span><strong>Mínimo Garantido:</strong> <span id="modal-minimum"></span></li>
+            </ul>
+
+            <button class="share-button" id="shareButton">Compartilhar</button>
+        </div>
+    </div>
+
+    <script>
+        // Importa o header externo
+        document.addEventListener("DOMContentLoaded", () => {           
+            fetch("header.html")
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById("header-placeholder").innerHTML = data;
+                })
+                .catch(err => console.error("Erro ao carregar header:", err));
+        });
+                
+    </script>
+
+    <script>        
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzF561YroAUncCLWNNQD4pIJA770oe0WHSxQ7_M-26LUdKoRxrA00AokJho0n7UmolF8w/exec';   
+        let allVagas = [];
+        
+        function getUrlParams() {
+            const params = {};
+            const queryString = window.location.search.substring(1);
+            const pairs = queryString.split('&');
+            
+            for (let i = 0; i < pairs.length; i++) {
+                const pair = pairs[i].split('=');
+                if (pair[0]) {
+                    params[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || '');
+                }
+            }
+            return params;
+        }
+        
+        async function fetchVagas() {
+            try {
+                const url = APPS_SCRIPT_URL + '?t=' + new Date().getTime();
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`Erro HTTP: ${response.status}`);
+                
+                const vagas = await response.json();
+                allVagas = Array.isArray(vagas) ? vagas : [];
+                
+                // Popula apenas os filtros que não são fixos
+                populateFilters(allVagas);
+                
+                const params = getUrlParams();
+                if (params.categoria) {
+                    document.getElementById('searchInput').value = params.categoria;
+                    filterVagas();
+                } else {
+                    renderVagas(allVagas);
+                }
+            } catch (error) {
+                console.error('Erro ao buscar vagas:', error);
+                showError('Não foi possível carregar as vagas. Tente novamente mais tarde.');
+            }
+        }
+
+        function populateFilters(vagas) {
+            // Não preenche mais os filtros de especialidade, estado, remuneração, alojamento, mínimo garantido e horário (agora são fixos)
+            const cidades = [...new Set(vagas.map(v => v.municipio).filter(Boolean))].sort();
+            
+            const cidadeSelect = document.getElementById('cidadeFilter');
+            
+            cidades.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item;
+                option.textContent = item;
+                cidadeSelect.appendChild(option);
+            });
+        }
+
+        function showError(message) {
+            const container = document.getElementById('job-listings-container');
+            container.innerHTML = `<div class="error-message">${message}</div>`;
+        }
+
+        function renderVagas(vagasToRender) {
+            const container = document.getElementById('job-listings-container');
+            const countDisplay = document.getElementById('job-count-display');
+            
+            countDisplay.textContent = `Mostrando ${vagasToRender.length} ${vagasToRender.length === 1 ? 'vaga' : 'vagas'}`;
+            container.innerHTML = '';
+            
+            if (vagasToRender.length === 0) {
+                container.innerHTML = '<p class="loading">Nenhuma vaga encontrada.</p>';
+                return;
+            }
+            
+            let html = '';
+            vagasToRender.forEach((vaga, index) => {
+                let tagClass = '';
+                if (vaga.regiao && vaga.regiao.toLowerCase().includes('nordeste')) {
+                    tagClass = 'northeast';
+                } else if (vaga.regiao && vaga.regiao.toLowerCase().includes('sudeste')) {
+                    tagClass = 'southeast';
+                } else {
+                    tagClass = 'hiring';
+                }
+
+                html += `
+                    <div class="job-card" onclick="openModal(${allVagas.indexOf(vaga)})">
+                        <span class="job-tag ${tagClass}">${vaga.regiao || 'Geral'}</span>
+                        <h3>${vaga.especialidade?.substring(0, 30) || 'Não informado'}</h3>>
+                        <ul class="card-details">
+                            <li><span class="material-icons">business</span> ${vaga.nome_da_clinica || 'Clínica não informada'}</li>
+                            <li><span class="material-icons">location_on</span> ${vaga.municipio || 'Cidade'} - ${vaga.uf || 'UF'}</li>
+                            <li><span class="material-icons">phone</span> ${vaga.contato || 'Contato não informado'}</li>
+                            <li><span class="material-icons">payments</span> ${vaga.remuneracao || 'Remuneração a combinar'}</li>
+                            <li><span class="material-icons">bed</span><strong>Alojamento:</strong> ${vaga.alojamento || 'Não informado'}</li>
+                            <li><span class="material-icons">paid</span><strong>Mínimo Garantido:</strong> ${vaga.minimo_garantido || 'Não informado'}</li>
+                        </ul>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function openModal(index) {
+            const vaga = allVagas[index];
+            if (!vaga) return;
+            
+            document.getElementById('modal-clinic-name').textContent = vaga.nome_da_clinica || 'Não informado';
+            document.getElementById('modal-specialty').textContent = vaga.especialidade || 'Não informado';
+            document.getElementById('modal-location').textContent = `${vaga.municipio || ''} - ${vaga.uf || ''}`;
+            document.getElementById('modal-contact').textContent = vaga.contato || 'Não informado';
+            document.getElementById('modal-address').textContent = `${vaga.endereco || ''} ${vaga.numero || ''}, ${vaga.bairro || ''} - CEP: ${vaga.cep || ''}`;
+            document.getElementById('modal-schedule').textContent = vaga.horario_de_trabalho || 'Não informado';
+            document.getElementById('modal-salary').textContent = vaga.remuneracao || 'Não informado';
+            document.getElementById('modal-accommodation').textContent = vaga.alojamento || 'Não informado';
+            document.getElementById('modal-minimum').textContent = vaga.minimo_garantido || 'Não informado';
+            
+            document.getElementById('shareButton').jobData = vaga;
+            document.getElementById('jobModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('jobModal').style.display = 'none';
+        }
+
+        function shareJob() {
+            const vaga = document.getElementById('shareButton').jobData;
+            if (!vaga) return;
+            
+            const shareText = `Vaga de emprego em odontologia! 🦷✨\n\n` +
+                              `🏢 Clínica: ${vaga.nome_da_clinica || 'Não informado'}\n` +
+                              `👨‍⚕️ Vaga: ${vaga.especialidade || 'Não informado'}\n` +
+                              `📍 Local: ${vaga.municipio || ''} - ${vaga.uf || ''}\n` +
+                              `📞 Contato: ${vaga.contato || 'Não informado'}\n` +
+                              `💰 Remuneração: ${vaga.remuneracao || 'Não informado'}\n` +
+                              `⏰ Horário: ${vaga.horario_de_trabalho || 'Não informado'}\n\n` +
+                              `🛏️ Alojamento: ${vaga.alojamento || 'Não informado'}\n` +
+                              `💵 Mínimo Garantido: ${vaga.minimo_garantido || 'Não informado'}\n\n` +
+                              `🌐 https://sites.google.com/view/tiradentesvagas`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: `Vaga: ${vaga.especialidade || 'Odontologia'} - ${vaga.nome_da_clinica || ''}`,
+                    text: shareText,
+                    url: window.location.href,
+                }).catch((error) => {
+                    console.error('Erro ao compartilhar:', error);
+                    alert('Copie o texto abaixo:\n\n' + shareText);
+                });
+            } else {
+                alert('Copie o texto abaixo:\n\n' + shareText);
+            }
+        }
+        
+        // Função auxiliar para normalizar textos para comparação
+        function normalizarTexto(texto) {
+            if (!texto) return '';
+            return texto.toLowerCase()
+                .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // Remove acentos
+                .replace(/\s+/g, ' ') // Normaliza espaços
+                .trim();
+        }
+        
+        // Função para mapear valores do banco para os valores do filtro
+        function mapearEspecialidade(valorBanco) {
+            if (!valorBanco) return '';
+            
+            const normalizado = normalizarTexto(valorBanco);
+            
+            // Mapeia variações comuns para os valores do filtro
+            if (normalizado.includes('dentist') || normalizado.includes('denti') || normalizado === 'dentista') {
+                return 'Dentista';
+            }
+            if (normalizado.includes('protes') || normalizado === 'protético') {
+                return 'Protético';
+            }
+            if (normalizado.includes('asb') || normalizado.includes('tsb') || normalizado.includes('auxiliar') || normalizado.includes('técnico')) {
+                return 'ASB ou TSB';
+            }
+            if (normalizado.includes('estag') || normalizado === 'estágios') {
+                return 'Estágios';
+            }
+            
+            return valorBanco;
+        }
+        
+        // Mapeamento de UF para nome completo do estado
+        function mapearEstado(uf) {
+            if (!uf) return '';
+            
+            const estados = {
+                'AC': 'Acre', 'AL': 'Alagoas', 'AP': 'Amapá', 'AM': 'Amazonas',
+                'BA': 'Bahia', 'CE': 'Ceará', 'DF': 'Distrito Federal', 'ES': 'Espírito Santo',
+                'GO': 'Goiás', 'MA': 'Maranhão', 'MT': 'Mato Grosso', 'MS': 'Mato Grosso do Sul',
+                'MG': 'Minas Gerais', 'PA': 'Pará', 'PB': 'Paraíba', 'PR': 'Paraná',
+                'PE': 'Pernambuco', 'PI': 'Piauí', 'RJ': 'Rio de Janeiro', 'RN': 'Rio Grande do Norte',
+                'RS': 'Rio Grande do Sul', 'RO': 'Rondônia', 'RR': 'Roraima', 'SC': 'Santa Catarina',
+                'SP': 'São Paulo', 'SE': 'Sergipe', 'TO': 'Tocantins'
+            };
+            
+            return estados[uf.toUpperCase()] || '';
+        }
+        
+        function filterVagas() {
+            const termo = normalizarTexto(document.getElementById('searchInput').value);
+            const especialidadeFiltro = document.getElementById('especialidadeFilter').value;
+            const estadoFiltro = document.getElementById('estadoFilter').value;
+            const cidadeFiltro = normalizarTexto(document.getElementById('cidadeFilter').value);
+            const remuneracao = normalizarTexto(document.getElementById('remuneracaoFilter').value);
+            const alojamento = normalizarTexto(document.getElementById('alojamentoFilter').value);
+            const minimo = normalizarTexto(document.getElementById('minimoGarantidoFilter').value);
+            const horario = normalizarTexto(document.getElementById('horarioFilter').value);
+
+            const filtradas = allVagas.filter(vaga => {
+                const termoMatch = !termo || 
+                                   (vaga.nome_da_clinica && normalizarTexto(vaga.nome_da_clinica).includes(termo)) ||
+                                   (vaga.especialidade && normalizarTexto(vaga.especialidade).includes(termo)) ||
+                                   (vaga.municipio && normalizarTexto(vaga.municipio).includes(termo)) ||
+                                   (vaga.uf && normalizarTexto(vaga.uf).includes(termo));
+                
+                // Mapeia a especialidade do banco para o valor do filtro
+                const especialidadeMapeada = mapearEspecialidade(vaga.especialidade);
+                const especialidadeMatch = !especialidadeFiltro || especialidadeMapeada === especialidadeFiltro;
+                
+                // Mapeia a UF para o nome completo do estado
+                const estadoMapeado = mapearEstado(vaga.uf);
+                const estadoMatch = !estadoFiltro || estadoMapeado === estadoFiltro;
+                
+                const cidadeMatch = !cidadeFiltro || (vaga.municipio && normalizarTexto(vaga.municipio) === cidadeFiltro);
+                const remuneracaoMatch = !remuneracao || (vaga.remuneracao && normalizarTexto(vaga.remuneracao) === remuneracao);
+                const alojamentoMatch = !alojamento || (vaga.alojamento && normalizarTexto(vaga.alojamento) === alojamento);
+                const minimoMatch = !minimo || (vaga.minimo_garantido && normalizarTexto(vaga.minimo_garantido) === minimo);
+                const horarioMatch = !horario || (vaga.horario_de_trabalho && normalizarTexto(vaga.horario_de_trabalho) === horario);
+
+                return termoMatch && especialidadeMatch && estadoMatch && cidadeMatch && 
+                       remuneracaoMatch && alojamentoMatch && minimoMatch && horarioMatch;
+            });
+            renderVagas(filtradas);
+        }
+
+        function clearFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('especialidadeFilter').value = '';
+            document.getElementById('estadoFilter').value = '';
+            document.getElementById('cidadeFilter').value = '';
+            document.getElementById('remuneracaoFilter').value = '';
+            document.getElementById('alojamentoFilter').value = '';
+            document.getElementById('minimoGarantidoFilter').value = '';
+            document.getElementById('horarioFilter').value = '';
+            renderVagas(allVagas);
+            document.getElementById('clearSearch').style.display = 'none';
+        }
+        
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            filterVagas();
+            document.getElementById('clearSearch').style.display = 'none';
+        }
+        
+        document.getElementById('searchInput').addEventListener('input', function() {
+            filterVagas();
+            document.getElementById('clearSearch').style.display = this.value ? 'block' : 'none';
+        });
+        
+        document.getElementById('clearSearch').addEventListener('click', clearSearch);
+        document.getElementById('especialidadeFilter').addEventListener('change', filterVagas);
+        document.getElementById('estadoFilter').addEventListener('change', filterVagas);
+        document.getElementById('cidadeFilter').addEventListener('change', filterVagas);
+        document.getElementById('remuneracaoFilter').addEventListener('change', filterVagas);
+        document.getElementById('alojamentoFilter').addEventListener('change', filterVagas);
+        document.getElementById('minimoGarantidoFilter').addEventListener('change', filterVagas);
+        document.getElementById('horarioFilter').addEventListener('change', filterVagas);
+
+        document.getElementById('clearButton').addEventListener('click', clearFilters);
+        document.getElementById('closeModal').addEventListener('click', closeModal);
+        document.getElementById('shareButton').addEventListener('click', shareJob);
+
+        window.addEventListener('click', function(event) {
+            if (event.target === document.getElementById('jobModal')) closeModal();
+        });
+        
+        document.addEventListener('DOMContentLoaded', fetchVagas);               
+    </script>
+</body>
+</html>

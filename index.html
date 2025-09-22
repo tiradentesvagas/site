@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <base target="_top">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tiradentes Vagas - Home</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f0f7fd;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px 15px;
+        }
+
+        /* Estilos do cabeçalho unificado */
+        .header-ad {
+            background-color: #0d47a1;
+            color: white;
+            font-weight: bold;
+            padding: 10px;
+            text-align: center;
+            font-size: 1.2em;
+        }
+
+        .header-title-box {
+            background-color: #1a8ff9;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        .header-title {
+            font-size: 2.5em;
+            margin-bottom: 5px;
+        }
+
+        .header-subtitle {
+            font-size: 1.1em;
+            margin-top: 0;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            background-color: #1a8ff9;
+            padding: 10px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .nav-button {
+            color: white;
+            text-decoration: none;
+            padding: 8px 15px;
+            margin: 0 5px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        
+        .nav-button:hover {
+            background-color: #0d47a1;
+        }
+
+        /* Título da página */
+        .page-title {
+            text-align: center;
+            font-size: 2.5em;
+            margin: 30px 0 20px;
+            color: #0d47a1;
+        }
+
+        /* Alterações solicitadas */
+        .page-subtitle {
+            text-align: center;
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #0d47a1;
+            margin-bottom: 30px;
+        }
+        
+        /* Botões */
+        .buttons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 50px;
+        }
+
+        .button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 20px 30px;
+            border-radius: 16px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid transparent;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            background-color: white;
+            color: #1a8ff9;
+        }
+        
+        .button i {
+            color: #0d47a1;
+            font-size: 1.2rem;
+        }
+        
+        .button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .button-primary {
+            background-color: #1a8ff9;
+            color: white;
+        }
+        
+        .button-primary i {
+            color: white;
+        }
+        
+        .button-primary:hover {
+            background-color: #0a68c9;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ccc;
+        }
+
+        /* Estilo da caixa de aviso */
+        .disclaimer-box {
+            background-color: #fff3e0;
+            border-left: 5px solid rgb(223, 133, 121);
+            padding: 15px;
+            margin-top: 20px;
+            color: black; /* Alterado para preto */
+            /* font-style: bold; */
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .buttons-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="header-placeholder"></div>
+
+        <h1 class="page-title">Bem-vindo ao Tiradentes!</h1>
+        <p class="page-subtitle">
+            O que você deseja e em qual classe você se insere?
+        </p>
+
+        <div class="buttons-grid">
+            <a href="cadastroVagas.html" class="button button-primary">
+                <i class="fas fa-plus"></i>
+                Cadastrar Vaga
+            </a>
+            
+            <a href="listarVagas.html?categoria=Dentista" class="button">
+                <i class="fas fa-tooth"></i>
+                Dentistas
+            </a>
+
+            <a href="listarVagas.html?categoria=Protético" class="button">
+                <i class="fas fa-tools"></i>
+                Protéticos
+            </a>
+
+            <a href="listarVagas.html?categoria=ASB ou TSB" class="button">
+                <i class="fas fa-user-md"></i>
+                ASB/TSB
+            </a>
+
+            <a href="listarVagas.html?categoria=Estágio" class="button">
+                <i class="fas fa-graduation-cap"></i>
+                Estágios
+            </a>
+
+            <a href="listarVagas.html" class="button">
+                <i class="fas fa-list"></i>
+                Ver Todas as Vagas
+            </a>
+        </div>
+
+        <div class="footer">
+            <h3 class="footer-title">Esse site é o único site/aplicativo exclusivo para vagas de Odontológia.</h3>
+            <div class="disclaimer-box">
+                <p>Não nos responsabilizamos por vagas ofertadas, apenas repassamos as demandas das clínicas e empregadores. Não forneça seus dados a ninguém.</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Carrega o header externo e o injeta na página
+        document.addEventListener("DOMContentLoaded", () => {
+            fetch("header.html")
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById("header-placeholder").innerHTML = data;
+                })
+                .catch(err => console.error("Erro ao carregar header:", err));
+        });
+    </script>
+</body>
+</html>
