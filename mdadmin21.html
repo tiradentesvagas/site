@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acesso Administrativo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --success: #2ecc71;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --gray: #95a5a6;
+            --text: #34495e;
+            --card-shadow: 0 10px 20px rgba(0,0,0,0.12), 0 4px 8px rgba(0,0,0,0.06);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .login-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            padding: 30px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        
+        .login-header {
+            margin-bottom: 25px;
+        }
+        
+        .login-header h1 {
+            color: var(--primary);
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .login-header p {
+            color: var(--gray);
+            font-size: 1rem;
+        }
+        
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .form-group {
+            text-align: left;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark);
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        
+        .btn {
+            padding: 12px 15px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .btn-primary {
+            background-color: var(--secondary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn:disabled {
+            background-color: var(--gray);
+            cursor: not-allowed;
+        }
+        
+        .error-message {
+            color: var(--accent);
+            margin-top: 5px;
+            font-size: 0.9rem;
+            display: none;
+            text-align: left;
+        }
+        
+        .admin-container {
+            display: none;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            width: 100%;
+        }
+        
+        #header-placeholder {
+            margin-bottom: 30px;
+        }
+        
+        .header {
+            background: var(--primary);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, var(--primary) 0%, var(--secondary) 100%);
+            z-index: -1;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 800px;
+        }
+        
+        .header i {
+            font-size: 2.2rem;
+        }
+        
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            text-align: center;
+            transition: var(--transition);
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-card h3 {
+            color: var(--gray);
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+        
+        .stat-card .number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--secondary);
+        }
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+        
+        .card-header {
+            background: var(--primary);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .card-header h2 {
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .card-body {
+            padding: 0;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 1.2rem;
+            color: var(--gray);
+        }
+        
+        .loading i {
+            display: block;
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: var(--secondary);
+            animation: spin 1.5s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .vacancies-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .vacancies-table th {
+            background-color: #f8f9fa;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--dark);
+            border-bottom: 2px solid #e9ecef;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .vacancies-table td {
+            padding: 15px;
+            border-bottom: 1px solid #e9ecef;
+            vertical-align: middle;
+        }
+        
+        .vacancies-table tr {
+            transition: var(--transition);
+        }
+        
+        .vacancies-table tr:not(:first-child):hover {
+            background-color: #f8f9fa;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.875rem;
+        }
+        
+        .btn-danger {
+            background-color: var(--accent);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #27ae60;
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--gray);
+            color: var(--gray);
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--gray);
+            color: white;
+        }
+        
+        #statusMessage {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+        
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .message-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .edit-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5);
+            padding: 20px;
+        }
+        
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 0;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 800px;
+            position: relative;
+            animation: modalopen 0.4s;
+        }
+        
+        @keyframes modalopen {
+            from {opacity: 0; transform: translateY(-60px);}
+            to {opacity: 1; transform: translateY(0);}
+        }
+        
+        .modal-header {
+            background: var(--primary);
+            color: white;
+            padding: 20px;
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-header h2 {
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .close-btn {
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            opacity: 0.8;
+            transition: var(--transition);
+        }
+        
+        .close-btn:hover {
+            opacity: 1;
+            transform: rotate(90deg);
+        }
+        
+        .modal-body {
+            padding: 25px;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+        
+        .edit-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .modal-footer {
+            padding: 20px;
+            background: #f8f9fa;
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .admin-container {
+                padding: 15px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .dashboard-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .edit-form {
+                grid-template-columns: 1fr;
+            }
+            
+            .vacancies-table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .modal-body {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div id="loginScreen" class="login-container">
+    <div class="login-header">
+        <h1><i class="fas fa-lock"></i> Acesso Restrito</h1>
+        <p>Digite a senha de administrador para continuar</p>
+    </div>
+    
+    <div class="login-form">
+        <div class="form-group">
+            <label for="password">Senha de Admin:</label>
+            <input type="password" id="password" placeholder="Digite a senha">
+            <div id="passwordError" class="error-message">
+                <i class="fas fa-exclamation-circle"></i> Senha incorreta
+            </div>
+        </div>
+        
+        <button id="loginBtn" class="btn btn-primary">
+            <i class="fas fa-sign-in-alt"></i> Entrar
+        </button>
+    </div>
+</div>
+
+<div id="adminContainer" class="admin-container">
+    <div id="header-placeholder">
+        <div class="header">
+            <h1><i class="fas fa-briefcase"></i> Painel de Administração de Vagas</h1>
+            <p>Gerencie e edite todas as vagas cadastradas no sistema de forma intuitiva e eficiente.</p>
+        </div>
+    </div>
+    
+    <div class="dashboard-stats">
+        <div class="stat-card">
+            <h3>Total de Vagas</h3>
+            <div class="number" id="totalVagas">0</div>
+        </div>
+        <div class="stat-card">
+            <h3>Última Atualização</h3>
+            <div class="number" id="ultimaAtualizacao">-</div>
+        </div>
+    </div>
+    
+    <div id="statusMessage"></div>
+    
+    <div class="card">
+        <div class="card-header">
+            <h2><i class="fas fa-list"></i> Lista de Vagas Cadastradas</h2>
+            <button class="btn btn-primary" onclick="fetchAndRenderVagas()">
+                <i class="fas fa-sync-alt"></i> Atualizar
+            </button>
+        </div>
+        <div class="card-body">
+            <div id="loading" class="loading">
+                <i class="fas fa-spinner"></i>
+                Carregando vagas...
+            </div>
+            
+            <table class="vacancies-table">
+                <thead>
+                    <tr>
+                        <th>ID da Vaga</th>
+                        <th>Clínica</th>
+                        <th>Município</th>
+                        <th>Especialidade</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="vacanciesList">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div id="editModal" class="edit-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2><i class="fas fa-edit"></i> Editar Vaga</h2>
+            <span class="close-btn">&times;</span>
+        </div>
+        <div class="modal-body">
+            <form id="editForm" class="edit-form">
+                <input type="hidden" id="idvaga" name="idvaga">
+                
+                <div class="form-group">
+                    <label for="nome">Nome da Clínica:</label>
+                    <input type="text" id="nome" name="nome" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="contato">Contato:</label>
+                    <input type="text" id="contato" name="contato">
+                </div>
+
+                <div class="form-group">
+                    <label for="cep">CEP:</label>
+                    <input type="text" id="cep" name="cep">
+                </div>
+                
+                <div class="form-group">
+                    <label for="endereco">Endereço:</label>
+                    <input type="text" id="endereco" name="endereco">
+                </div>
+
+                <div class="form-group">
+                    <label for="numero">Número:</label>
+                    <input type="text" id="numero" name="numero">
+                </div>
+                
+                <div class="form-group">
+                    <label for="bairro">Bairro:</label>
+                    <input type="text" id="bairro" name="bairro">
+                </div>
+                
+                <div class="form-group">
+                    <label for="municipio">Município:</label>
+                    <input type="text" id="municipio" name="municipio">
+                </div>
+                
+                <div class="form-group">
+                    <label for="estado">Estado:</label>
+                    <input type="text" id="estado" name="estado">
+                </div>
+
+                <div class="form-group">
+                    <label for="uf">UF:</label>
+                    <input type="text" id="uf" name="uf">
+                </div>
+                
+                <div class="form-group">
+                    <label for="regiao">Região:</label>
+                    <input type="text" id="regiao" name="regiao">
+                </div>
+                
+                <div class="form-group">
+                    <label for="alojamento">Alojamento:</label>
+                    <input type="text" id="alojamento" name="alojamento">
+                </div>
+                
+                <div class="form-group">
+                    <label for="horario_de_trabalho">Horário de Trabalho:</label>
+                    <input type="text" id="horario_de_trabalho" name="horario_de_trabalho">
+                </div>
+                
+                <div class="form-group">
+                    <label for="remuneracao">Remuneração:</label>
+                    <input type="text" id="remuneracao" name="remuneracao">
+                </div>
+
+                <div class="form-group">
+                    <label for="porcentagem">Valor da Porcentagem:</label>
+                    <input type="text" id="porcentagem" name="porcentagem">
+                </div>
+
+                <div class="form-group">
+                    <label for="minimo_garantido">Mínimo Garantido:</label>
+                    <input type="text" id="minimo_garantido" name="minimo_garantido">
+                </div>
+                
+                <div class="form-group">
+                    <label for="especialidade">Especialidade:</label>
+                    <input type="text" id="especialidade" name="especialidade">
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-outline" id="cancelButton">
+                <i class="fas fa-times"></i> Cancelar
+            </button>
+            <button type="button" class="btn btn-success" id="saveButton">
+                <i class="fas fa-save"></i> Salvar Alterações
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // URL do seu Google Apps Script, conforme fornecido.
+    const APP_URL = 'https://script.google.com/macros/s/AKfycbzifhUcXMR1SLs5LP8NzetdREEn-i6e3muhBmV5bXM0PdLVUxmo1MoMZYh3doLeJzfM4A/exec';
+
+    // Mapeamento dos campos do formulário para os cabeçalhos da planilha.
+    const FIELD_MAPPING = {
+        'carimbo_de_data_hora': 'carimbo_de_data_hora',
+        'nome': 'nome_da_clinica',
+        'contato': 'contato',
+        'cep': 'cep',
+        'endereco': 'endereco',
+        'numero': 'numero',
+        'bairro': 'bairro',
+        'municipio': 'municipio',
+        'estado': 'estado',
+        'uf': 'uf',
+        'regiao': 'regiao',
+        'alojamento': 'alojamento',
+        'horario_de_trabalho': 'horario_de_trabalho',
+        'remuneracao': 'remuneracao',
+        'porcentagem': 'valor_da_porcentagem',
+        'minimo_garantido': 'minimo_garantido',
+        'especialidade': 'especialidade',
+        'emailCadastrante': 'emailcadastrante',
+        'idvaga': 'idvaga'
+    };
+
+    // Elementos da tela de login
+    const loginScreen = document.getElementById('loginScreen');
+    const adminContainer = document.getElementById('adminContainer');
+    const passwordInput = document.getElementById('password');
+    const loginBtn = document.getElementById('loginBtn');
+    const passwordError = document.getElementById('passwordError');
+
+    // Elementos do painel administrativo
+    const vacanciesList = document.getElementById('vacanciesList');
+    const loadingMessage = document.getElementById('loading');
+    const statusMessage = document.getElementById('statusMessage');
+    const editModal = document.getElementById('editModal');
+    const editForm = document.getElementById('editForm');
+    const closeBtn = document.querySelector('.close-btn');
+    const cancelButton = document.getElementById('cancelButton');
+    const saveButton = document.getElementById('saveButton');
+    const totalVagasElement = document.getElementById('totalVagas');
+    const ultimaAtualizacaoElement = document.getElementById('ultimaAtualizacao');
+
+    /**
+     * Função para verificar a senha remotamente com o Google Apps Script.
+     */
+    async function checkPassword() {
+        const enteredPassword = passwordInput.value;
+        if (!enteredPassword) {
+            passwordError.innerHTML = '<i class="fas fa-exclamation-circle"></i> Por favor, digite a senha.';
+            passwordError.style.display = 'block';
+            return;
+        }
+        
+        // Desabilita o botão e mostra feedback de carregamento
+        loginBtn.disabled = true;
+        loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verificando...';
+        passwordError.style.display = 'none';
+        
+        const formData = new FormData();
+        formData.append('action', 'verifyPassword');
+        formData.append('password', enteredPassword);
+        
+        try {
+            const response = await fetch(APP_URL, {
+                method: 'POST',
+                body: formData
+            });
+            const result = await response.json();
+            
+            if (result.success) {
+                // Senha correta - mostrar painel administrativo
+                loginScreen.style.display = 'none';
+                adminContainer.style.display = 'block';
+                // Carregar os dados
+                fetchAndRenderVagas();
+            } else {
+                // Senha incorreta ou erro do servidor - mostrar erro
+                passwordError.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${result.message || 'Senha incorreta'}`;
+                passwordError.style.display = 'block';
+                passwordInput.focus();
+            }
+        } catch (error) {
+            console.error('Erro ao verificar senha:', error);
+            passwordError.innerHTML = '<i class="fas fa-exclamation-circle"></i> Erro de conexão. Tente novamente mais tarde.';
+            passwordError.style.display = 'block';
+        } finally {
+            // Reabilita o botão após a verificação
+            loginBtn.disabled = false;
+            loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Entrar';
+        }
+    }
+
+    // Event listeners para o login
+    loginBtn.addEventListener('click', checkPassword);
+    passwordInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            checkPassword();
+        }
+    });
+    
+    // Esconde a mensagem de erro ao digitar
+    passwordInput.addEventListener('input', () => {
+        if (passwordError.style.display === 'block') {
+            passwordError.style.display = 'none';
+        }
+    });
+
+    // Função para mostrar mensagem de status
+    function showStatus(message, isError = false) {
+        statusMessage.textContent = message;
+        statusMessage.className = isError ? 'message-error' : 'success-message';
+        statusMessage.style.display = 'block';
+        setTimeout(() => {
+            statusMessage.textContent = '';
+            statusMessage.className = '';
+            statusMessage.style.display = 'none';
+        }, 5000);
+    }
+
+    // Função para atualizar estatísticas
+    function updateStats(vagas) {
+        totalVagasElement.textContent = vagas.length;
+        ultimaAtualizacaoElement.textContent = new Date().toLocaleTimeString('pt-BR');
+    }
+
+    // Função para buscar e renderizar as vagas
+    async function fetchAndRenderVagas() {
+        loadingMessage.style.display = 'block';
+        vacanciesList.innerHTML = '';
+
+        try {
+            const response = await fetch(`${APP_URL}?action=getVagas`);
+            const vagas = await response.json();
+            
+            if (vagas.error) {
+                throw new Error(vagas.error);
+            }
+
+            if (vagas.length === 0) {
+                vacanciesList.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 30px;">Nenhuma vaga encontrada.</td></tr>';
+            } else {
+                renderVagas(vagas);
+            }
+            updateStats(vagas); // Atualiza as estatísticas mesmo que não haja vagas
+        } catch (error) {
+            console.error('Erro ao buscar vagas:', error);
+            vacanciesList.innerHTML = '<tr><td colspan="5" style="color:red; text-align: center; padding: 30px;">Erro ao carregar as vagas. Tente novamente.</td></tr>';
+        } finally {
+            loadingMessage.style.display = 'none';
+        }
+    }
+
+    // Função para renderizar a tabela de vagas
+    function renderVagas(vagas) {
+        vacanciesList.innerHTML = '';
+        vagas.forEach(vaga => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${vaga.idvaga || '-'}</td>
+                <td>${vaga.nome_da_clinica || '-'}</td>
+                <td>${vaga.municipio || '-'}</td>
+                <td>${vaga.especialidade || '-'}</td>
+                <td class="actions">
+                    <button class="btn btn-primary btn-sm edit-btn" data-id="${vaga.idvaga}">
+                        <i class="fas fa-edit"></i> Editar
+                    </button>
+                    <button class="btn btn-danger btn-sm delete-btn" data-id="${vaga.idvaga}">
+                        <i class="fas fa-trash"></i> Deletar
+                    </button>
+                </td>
+            `;
+            vacanciesList.appendChild(row);
+
+            // Adiciona listeners para os botões de edição e exclusão
+            row.querySelector('.edit-btn').addEventListener('click', () => openEditModal(vaga));
+            row.querySelector('.delete-btn').addEventListener('click', () => deleteVaga(vaga.idvaga));
+        });
+    }
+
+    // Abre o modal de edição e preenche com os dados da vaga
+    function openEditModal(vaga) {
+        for (const formKey in FIELD_MAPPING) {
+            const inputElement = document.getElementById(formKey);
+            const sheetKey = FIELD_MAPPING[formKey];
+            
+            if (inputElement && vaga[sheetKey] !== undefined) {
+                inputElement.value = vaga[sheetKey];
+            }
+        }
+        
+        document.getElementById('idvaga').value = vaga.idvaga;
+        editModal.style.display = 'block';
+    }
+
+    function closeModal() {
+        editModal.style.display = 'none';
+    }
+
+    closeBtn.onclick = closeModal;
+    cancelButton.onclick = closeModal;
+
+    // Função para deletar uma vaga
+    async function deleteVaga(id) {
+        if (!confirm(`Tem certeza que deseja apagar a vaga com ID ${id}?`)) {
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('action', 'deleteVagas');
+        formData.append('ids', id);
+
+        try {
+            const response = await fetch(APP_URL, {
+                method: 'POST',
+                body: formData
+            });
+            const result = await response.json();
+            
+            if (result.success) {
+                showStatus(result.message);
+                fetchAndRenderVagas();
+            } else {
+                showStatus(result.message, true);
+            }
+        } catch (error) {
+            console.error('Erro ao deletar vaga:', error);
+            showStatus('Erro ao apagar a vaga. Verifique a conexão.', true);
+        }
+    }
+
+    // Lida com o envio do formulário de edição
+    saveButton.addEventListener('click', async function() {
+        const formData = new FormData(editForm);
+        formData.append('action', 'updateVaga');
+
+        try {
+            const response = await fetch(APP_URL, {
+                method: 'POST',
+                body: formData
+            });
+            const result = await response.json();
+
+            if (result.success) {
+                showStatus(result.message);
+                closeModal();
+                fetchAndRenderVagas();
+            } else {
+                showStatus(result.message, true);
+            }
+        } catch (error) {
+            console.error('Erro ao atualizar vaga:', error);
+            showStatus('Erro ao atualizar a vaga. Verifique a conexão.', true);
+        }
+    });
+
+    // Focar no campo de senha quando a página carregar
+    window.onload = function() {
+        passwordInput.focus();
+    };
+</script>
+
+</body>
+</html>
