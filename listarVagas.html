@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>    
+<head>
     <base target="_top">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tiradentes Vagas - Ver Vagas</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
-        /* Estilos anteriores mantidos intactos */
+        /* Estilos globais e base */
         * {
             margin: 0;
             padding: 0;
@@ -73,7 +73,7 @@
         }
         
         .search-input {
-            padding-right: 40px; /* Espaço para o ícone X */
+            padding-right: 40px;
         }
         
         .clear-search {
@@ -342,6 +342,55 @@
             from { transform: translateY(-50px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
         }
+        
+        /* Media Queries para responsividade */
+        /* Tablet e telas médias */
+        @media (max-width: 768px) {
+            .search-filter-bar {
+                padding: 15px;
+                grid-template-columns: 1fr;
+            }
+            .job-listings {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            .job-card {
+                padding: 20px;
+            }
+            .modal-content {
+                margin: 5% auto;
+                max-width: 90%;
+            }
+            .job-count-display {
+                margin-top: 15px;
+                margin-bottom: 15px;
+            }
+        }
+
+        /* Smartphone e telas pequenas */
+        @media (max-width: 480px) {
+            .search-filter-bar {
+                padding: 10px;
+                margin-top: 20px;
+                gap: 10px;
+            }
+            .search-input, .filter-select {
+                padding: 12px 15px;
+                font-size: 14px;
+            }
+            .job-card h3 {
+                font-size: 1.4em;
+            }
+            .job-card {
+                padding: 15px;
+            }
+            .job-tag {
+                top: 15px;
+                right: 15px;
+                padding: 4px 10px;
+                font-size: 0.75em;
+            }
+        }
     </style>
 </head>
 <body>
@@ -403,7 +452,6 @@
                     <option value="">Todas as cidades</option>
                 </select>
             </div>
-            <!-- FILTRO DE REMUNERAÇÃO FIXO -->
             <div class="filter-group">
                 <label for="remuneracaoFilter">Remuneração</label>
                 <select id="remuneracaoFilter" class="filter-select">
@@ -414,7 +462,6 @@
                     <option value="Prolabore">Prolabore</option>
                 </select>
             </div>
-            <!-- FILTRO DE ALOJAMENTO FIXO -->
             <div class="filter-group">
                 <label for="alojamentoFilter">Alojamento</label>
                 <select id="alojamentoFilter" class="filter-select">
@@ -423,7 +470,6 @@
                     <option value="Não">Sem alojamento</option>
                 </select>
             </div>
-            <!-- FILTRO DE MÍNIMO GARANTIDO FIXO -->
             <div class="filter-group">
                 <label for="minimoGarantidoFilter">Mínimo Garantido</label>
                 <select id="minimoGarantidoFilter" class="filter-select">
@@ -432,7 +478,6 @@
                     <option value="Não">Não</option>
                 </select>
             </div>
-            <!-- FILTRO DE HORÁRIO FIXO -->
             <div class="filter-group">
                 <label for="horarioFilter">Horário</label>
                 <select id="horarioFilter" class="filter-select">
@@ -646,8 +691,8 @@
         function normalizarTexto(texto) {
             if (!texto) return '';
             return texto.toLowerCase()
-                .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // Remove acentos
-                .replace(/\s+/g, ' ') // Normaliza espaços
+                .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+                .replace(/\s+/g, ' ')
                 .trim();
         }
         
@@ -657,7 +702,6 @@
             
             const normalizado = normalizarTexto(valorBanco);
             
-            // Mapeia variações comuns para os valores do filtro
             if (normalizado.includes('dentist') || normalizado.includes('denti') || normalizado === 'dentista') {
                 return 'Dentista';
             }
@@ -708,11 +752,9 @@
                                    (vaga.municipio && normalizarTexto(vaga.municipio).includes(termo)) ||
                                    (vaga.uf && normalizarTexto(vaga.uf).includes(termo));
                 
-                // Mapeia a especialidade do banco para o valor do filtro
                 const especialidadeMapeada = mapearEspecialidade(vaga.especialidade);
                 const especialidadeMatch = !especialidadeFiltro || especialidadeMapeada === especialidadeFiltro;
                 
-                // Mapeia a UF para o nome completo do estado
                 const estadoMapeado = mapearEstado(vaga.uf);
                 const estadoMatch = !estadoFiltro || estadoMapeado === estadoFiltro;
                 
