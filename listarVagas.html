@@ -623,8 +623,8 @@
                         <span class="job-tag ${tagClass}">${vaga.regiao || 'Geral'}</span>
                         <h3>${vaga.especialidade?.substring(0, 30) || 'Não informado'}</h3>
                         <ul class="card-details">
-                            <li><span class="material-icons">business</span> ${vaga.nome_da_clinica || 'Clínica não informada'}</li>
-                            <li><span class="material-icons">location_on</span> ${vaga.municipio || 'Cidade'} - ${vaga.uf || 'UF'}</li>
+                            <li><span class="material-icons">business</span> ${vaga.nome_da_clinica || 'Não informada'}</li>
+                            <li><span class="material-icons">location_on</span> ${vaga.municipio || 'Não informada'} - ${vaga.uf || 'UF'}</li>
                             <li><span class="material-icons">phone</span> ${vaga.contato || 'Contato não informado'}</li>
                             <li><span class="material-icons">payments</span> ${vaga.remuneracao || 'Remuneração a combinar'}</li>
                             <li><span class="material-icons">bed</span><strong>Alojamento:</strong> ${vaga.alojamento || 'Não informado'}</li>
@@ -662,7 +662,7 @@
             const vaga = document.getElementById('shareButton').jobData;
             if (!vaga) return;
             
-            const shareText = `Vaga de emprego em odontologia! 🦷✨\n\n` +
+            const shareText = `Tiradentes Vagas 🦷✨\n\n` +
                               `🏢 Clínica: ${vaga.nome_da_clinica || 'Não informado'}\n` +
                               `👨‍⚕️ Vaga: ${vaga.especialidade || 'Não informado'}\n` +
                               `📍 Local: ${vaga.municipio || ''} - ${vaga.uf || ''}\n` +
@@ -671,11 +671,11 @@
                               `⏰ Horário: ${vaga.horario_de_trabalho || 'Não informado'}\n\n` +
                               `🛏️ Alojamento: ${vaga.alojamento || 'Não informado'}\n` +
                               `💵 Mínimo Garantido: ${vaga.minimo_garantido || 'Não informado'}\n\n` +
-                              `🌐 https://sites.google.com/view/tiradentesvagas`;
+                              `🌐 https://tiradentesvagas.github.io`;
             
             if (navigator.share) {
                 navigator.share({
-                    title: `Vaga: ${vaga.especialidade || 'Odontologia'} - ${vaga.nome_da_clinica || ''}`,
+                    title: `Vaga: ${vaga.especialidade} - ${vaga.nome_da_clinica || ''}`,
                     text: shareText,
                     url: window.location.href,
                 }).catch((error) => {
