@@ -511,7 +511,8 @@
                 <li><span class="material-icons">person</span><strong>Contato:</strong> <span id="modal-contact"></span></li>
                 <li><span class="material-icons">home</span><strong>Endereço:</strong> <span id="modal-address"></span></li>
                 <li><span class="material-icons">schedule</span><strong>Horário:</strong> <span id="modal-schedule"></span></li>
-                <li><span class="material-icons">payments</span><strong>Remuneração:</strong> <span id="modal-salary"></span></li>
+                <li><span class="material-icons">payments</span><strong>Remuneração:</strong> <span id="modal-salary"></span></li>                
+                <li id="porcentagem-info" style="display: none;"><span class="material-icons">trending_up</span><strong>Se Porcentagem:</strong> <span id="modal-porcentagem"></span></li>
                 <li><span class="material-icons">bed</span><strong>Alojamento:</strong> <span id="modal-accommodation"></span></li>
                 <li><span class="material-icons">paid</span><strong>Mínimo Garantido:</strong> <span id="modal-minimum"></span></li>
             </ul>
@@ -627,6 +628,8 @@
                             <li><span class="material-icons">location_on</span> ${vaga.municipio || 'Não informada'} - ${vaga.uf || 'UF'}</li>
                             <li><span class="material-icons">phone</span> ${vaga.contato || 'Contato não informado'}</li>
                             <li><span class="material-icons">payments</span> ${vaga.remuneracao || 'Remuneração a combinar'}</li>
+                            ${vaga.remuneracao && vaga.remuneracao.toLowerCase() === 'porcentagem' ? 
+                                `<li><span class="material-icons">trending_up</span><strong>Se Porcentagem:</strong> ${formatarPorcentagem(vaga.valor_da_porcentagem)}</li>` : ''}
                             <li><span class="material-icons">bed</span><strong>Alojamento:</strong> ${vaga.alojamento || 'Não informado'}</li>
                             <li><span class="material-icons">paid</span><strong>Mínimo Garantido:</strong> ${vaga.minimo_garantido || 'Não informado'}</li>
                         </ul>
@@ -647,6 +650,17 @@
             document.getElementById('modal-address').textContent = `${vaga.endereco || ''} ${vaga.numero || ''}, ${vaga.bairro || ''} - CEP: ${vaga.cep || ''}`;
             document.getElementById('modal-schedule').textContent = vaga.horario_de_trabalho || 'Não informado';
             document.getElementById('modal-salary').textContent = vaga.remuneracao || 'Não informado';
+            
+            // Lógica para o novo campo "Se porcentagem" no modal
+            const porcentagemInfo = document.getElementById('porcentagem-info');
+            const modalPorcentagem = document.getElementById('modal-porcentagem');
+            if (vaga.remuneracao && vaga.remuneracao.toLowerCase() === 'porcentagem') {
+                porcentagemInfo.style.display = 'flex';
+                modalPorcentagem.textContent = formatarPorcentagem(vaga.valor_da_porcentagem);
+            } else {
+                porcentagemInfo.style.display = 'none';
+            }
+            
             document.getElementById('modal-accommodation').textContent = vaga.alojamento || 'Não informado';
             document.getElementById('modal-minimum').textContent = vaga.minimo_garantido || 'Não informado';
             
@@ -656,6 +670,25 @@
 
         function closeModal() {
             document.getElementById('jobModal').style.display = 'none';
+        }
+        
+        // Nova função para formatar o valor como porcentagem
+        function formatarPorcentagem(valor) {
+            if (!valor) {
+                return 'Não informado';
+            }
+            // Tenta converter para número e formatar
+            const numero = parseFloat(valor);
+            if (!isNaN(numero)) {
+                // Se for um número decimal (ex: 0.4), multiplica por 100
+                if (numero < 1) {
+                    return (numero * 100) + '%';
+                }
+                // Se já for um número inteiro (ex: 40), apenas adiciona o %
+                return numero + '%';
+            }
+            // Retorna o valor original se não for um número
+            return valor;
         }
 
         function shareJob() {
@@ -668,6 +701,7 @@
                               `📍 Local: ${vaga.municipio || ''} - ${vaga.uf || ''}\n` +
                               `📞 Contato: ${vaga.contato || 'Não informado'}\n` +
                               `💰 Remuneração: ${vaga.remuneracao || 'Não informado'}\n` +
+                              (vaga.remuneracao && vaga.remuneracao.toLowerCase() === 'porcentagem' ? `📈 Porcentagem: ${formatarPorcentagem(vaga.valor_da_porcentagem)}\n` : '') +
                               `⏰ Horário: ${vaga.horario_de_trabalho || 'Não informado'}\n\n` +
                               `🛏️ Alojamento: ${vaga.alojamento || 'Não informado'}\n` +
                               `💵 Mínimo Garantido: ${vaga.minimo_garantido || 'Não informado'}`;
@@ -814,4 +848,3 @@
     </script>
 </body>
 </html>
-
