@@ -21,15 +21,22 @@
             position: relative;
         }
 
-        /* Estilos da nova navegação */
+        /* Container responsivo */
+        .container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 16px;
+            width: 100%;
+        }
+
+        /* Estilos da nova navegação - Otimizado para mobile */
         .header {
-            background: #1976d2;
             background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
-            padding: 32px 20px;
+            padding: 24px 16px;
             text-align: center;
-            border-radius: 16px;
-            margin-bottom: 24px;
-            box-shadow: 0 8px 24px rgba(25, 118, 210, 0.3);
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
             position: relative;
             overflow: hidden;
             z-index: 1;
@@ -37,36 +44,38 @@
 
         .header h1 {
             color: white;
-            font-size: 2.2em;
+            font-size: 1.8rem;
             margin-bottom: 8px;
             font-weight: 700;
             text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
             z-index: 2;
             position: relative;
+            line-height: 1.2;
         }
         
         .header p {
             color: rgba(255, 255, 255, 0.9);
-            font-size: 1.1em;
+            font-size: 1rem;
             z-index: 2;
             position: relative;
+            line-height: 1.4;
         }
 
-        /* Estilos da navegação para os botões */
+        /* Estilos da navegação para os botões - Otimizado para mobile */
         .nav {
             display: flex;
             justify-content: center;
-            gap: 12px;
-            margin-top: 24px;
+            gap: 10px;
+            margin-top: 20px;
             flex-wrap: wrap;
         }
         
         .nav-btn {
-            padding: 14px 24px;
+            padding: 14px 20px;
             background: #ffffff;
             color: #1976d2;
             border: none;
-            border-radius: 50px; /* Borda mais arredondada */
+            border-radius: 50px;
             cursor: pointer;
             font-weight: 600;
             font-size: 15px;
@@ -74,24 +83,29 @@
             text-decoration: none;
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            min-height: 48px; /* Altura mínima para toque fácil */
+            flex: 1; /* Permite que os botões se expandam */
+            min-width: 120px; /* Largura mínima */
+            max-width: 100%; /* Não ultrapassar a largura do container */
         }
 
         .nav-btn:hover {
             background: #e3f2fd;
             transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(25, 118, 210, 0.2);
+            box-shadow: 0 4px 10px rgba(25, 118, 210, 0.2);
         }
         
         .nav-btn.active {
             background: #1976d2;
             color: white;
-            box-shadow: 0 4px 15px rgba(25, 118, 210, 0.4);
+            box-shadow: 0 4px 12px rgba(25, 118, 210, 0.4);
             transform: translateY(-2px);
         }
 
-        /* Animação de partículas */
+        /* Animação de partículas - Otimizada para mobile */
         #particles {
             position: absolute;
             top: 0;
@@ -115,12 +129,81 @@
             100% { transform: translate(var(--dx), var(--dy)) scale(0); opacity: 0; }
         }
 
-        /* Estilos adicionais do container e outros elementos, conforme o código original */
-        .container { max-width: 1200px; margin: 0 auto; padding: 16px; }
-
+        /* Media Queries para dispositivos móveis */
         @media (max-width: 768px) {
-            .nav { flex-direction: column; gap: 8px; }
-            .nav-btn { width: 100%; max-width: 100%; }
+            .container {
+                padding: 12px;
+            }
+            
+            .header {
+                padding: 20px 12px;
+                border-radius: 10px;
+                margin-bottom: 16px;
+            }
+            
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .header p {
+                font-size: 0.9rem;
+            }
+            
+            .nav {
+                flex-direction: row;
+                gap: 8px;
+                margin-top: 16px;
+            }
+            
+            .nav-btn {
+                padding: 12px 16px;
+                font-size: 14px;
+                min-height: 44px;
+                flex: 1 0 calc(50% - 8px); /* Dois botões por linha */
+            }
+            
+            .nav-btn i {
+                font-size: 16px;
+            }
+            
+            /* Reduzir número de partículas em mobile para melhor performance */
+            .particle {
+                display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                padding: 18px 10px;
+            }
+            
+            .header h1 {
+                font-size: 1.4rem;
+            }
+            
+            .nav {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .nav-btn {
+                width: 100%;
+                flex: none;
+                max-width: 100%;
+            }
+        }
+
+        /* Melhorias de acessibilidade para toque */
+        @media (hover: none) {
+            .nav-btn:hover {
+                transform: none;
+                background: #ffffff;
+            }
+            
+            .nav-btn.active:hover {
+                background: #1976d2;
+                transform: none;
+            }
         }
     </style>
 </head>
@@ -136,13 +219,17 @@
         <a href="listarVagas.html" class="nav-btn active"><i class="fas fa-briefcase"></i> Ver Vagas</a>
         <a href="cadastroVagas.html" class="nav-btn"><i class="fas fa-plus-circle"></i> Cadastrar Vaga</a>            
     </nav>
-     
   </div>
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Verificar se é dispositivo móvel
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        
         const particlesContainer = document.getElementById('particles');
-        const particleCount = 20;
+        
+        // Reduzir número de partículas em dispositivos móveis para melhor performance
+        const particleCount = isMobile ? 8 : 20;
         
         for (let i = 0; i < particleCount; i++) {
             const particle = document.createElement('div');
@@ -154,7 +241,8 @@
             
             particle.style.left = `${Math.random() * 100}%`;
             
-            particle.style.animationDuration = `${12 + Math.random() * 6}s`;
+            // Ajustar duração da animação para mobile
+            particle.style.animationDuration = `${isMobile ? 8 + Math.random() * 4 : 12 + Math.random() * 6}s`;
             particle.style.animationDelay = `-${Math.random() * 15}s`;
             
             particle.style.setProperty('--dx', `${(Math.random() - 0.5) * 50}px`);
