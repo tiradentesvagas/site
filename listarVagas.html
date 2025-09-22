@@ -576,7 +576,7 @@
                 html += `
                     <div class="job-card" onclick="openModal(${allVagas.indexOf(vaga)})">
                         <span class="job-tag ${tagClass}">${vaga.regiao || 'Geral'}</span>
-                        <h3>${vaga.especialidade?.substring(0, 30) || 'Não informado'}</h3>>
+                        <h3>${vaga.especialidade?.substring(0, 30) || 'Não informado'}</h3>
                         <ul class="card-details">
                             <li><span class="material-icons">business</span> ${vaga.nome_da_clinica || 'Clínica não informada'}</li>
                             <li><span class="material-icons">location_on</span> ${vaga.municipio || 'Cidade'} - ${vaga.uf || 'UF'}</li>
