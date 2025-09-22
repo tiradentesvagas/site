@@ -512,7 +512,7 @@
                 <li><span class="material-icons">home</span><strong>Endereço:</strong> <span id="modal-address"></span></li>
                 <li><span class="material-icons">schedule</span><strong>Horário:</strong> <span id="modal-schedule"></span></li>
                 <li><span class="material-icons">payments</span><strong>Remuneração:</strong> <span id="modal-salary"></span></li>                
-                <li id="porcentagem-info" style="display: none;"><span class="material-icons">trending_up</span><strong>Se Porcentagem:</strong> <span id="modal-porcentagem"></span></li>
+                <li id="porcentagem-info" style="display: none;"><span class="material-icons">trending_up</span><strong>Val. Porcentagem:</strong> <span id="modal-porcentagem"></span></li>
                 <li><span class="material-icons">bed</span><strong>Alojamento:</strong> <span id="modal-accommodation"></span></li>
                 <li><span class="material-icons">paid</span><strong>Mínimo Garantido:</strong> <span id="modal-minimum"></span></li>
             </ul>
@@ -629,7 +629,7 @@
                             <li><span class="material-icons">phone</span> ${vaga.contato || 'Contato não informado'}</li>
                             <li><span class="material-icons">payments</span> ${vaga.remuneracao || 'Remuneração a combinar'}</li>
                             ${vaga.remuneracao && vaga.remuneracao.toLowerCase() === 'porcentagem' ? 
-                                `<li><span class="material-icons">trending_up</span><strong>Se Porcentagem:</strong> ${formatarPorcentagem(vaga.valor_da_porcentagem)}</li>` : ''}
+                                `<li><span class="material-icons">trending_up</span><strong>Val. Porcentagem:</strong> ${formatarPorcentagem(vaga.valor_da_porcentagem)}</li>` : ''}
                             <li><span class="material-icons">bed</span><strong>Alojamento:</strong> ${vaga.alojamento || 'Não informado'}</li>
                             <li><span class="material-icons">paid</span><strong>Mínimo Garantido:</strong> ${vaga.minimo_garantido || 'Não informado'}</li>
                         </ul>
