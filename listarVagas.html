@@ -170,6 +170,16 @@
         }
         .job-tag.northeast { background-color: #2196F3; }
         .job-tag.southeast { background-color: #FFC107; color: #333; }
+        
+        /* Estilo da data de cadastro atualizado */
+        .job-date {
+            position: absolute;
+            bottom: 15px;
+            right: 20px;
+            font-size: 0.85em;
+            color: black;
+            font-weight: normal; /* Removendo o negrito */
+        }
 
         .job-card h3 {
             font-size: 1.6em;
@@ -390,6 +400,11 @@
                 padding: 4px 10px;
                 font-size: 0.75em;
             }
+            .job-date {
+                font-size: 0.75em;
+                bottom: 10px;
+                right: 10px;
+            }
         }
     </style>
 </head>
@@ -535,7 +550,7 @@
     </script>
 
     <script>        
-        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzifhUcXMR1SLs5LP8NzetdREEn-i6e3muhBmV5bXM0PdLVUxmo1MoMZYh3doLeJzfM4A/exec';   
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwtGbv_WUV4GSPqupFyDIb3qG16l9PD1RsbKEPult49fYwH6F-aF0cjtuIbcG2ZO5lL/exec';   
         let allVagas = [];
         
         function getUrlParams() {
@@ -633,6 +648,7 @@
                             <li><span class="material-icons">bed</span><strong>Alojamento:</strong> ${vaga.alojamento || 'Não informado'}</li>
                             <li><span class="material-icons">paid</span><strong>Mínimo Garantido:</strong> ${vaga.minimo_garantido || 'Não informado'}</li>
                         </ul>
+                        <p class="job-date">Publicada em: ${formatarData(vaga.carimbo_de_data_hora) || 'Não informada'}</p>
                     </div>
                 `;
             });
@@ -727,6 +743,15 @@
                 .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
                 .replace(/\s+/g, ' ')
                 .trim();
+        }
+
+        // NOVO: Função para formatar o carimbo de data/hora para mostrar apenas a data
+        function formatarData(dataString) {
+            if (!dataString) {
+                return '';
+            }
+            const data = new Date(dataString);
+            return data.toLocaleDateString('pt-BR'); // Formato DD/MM/AAAA
         }
         
         // Função para mapear valores do banco para os valores do filtro
